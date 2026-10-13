@@ -1,0 +1,34 @@
+{
+  "name": "renewables_browser",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "seed": "node scripts/seed.mjs"
+  },
+  "dependencies": {
+    "@vercel/functions": "^3.9.11",
+    "maplibre-gl": "^5.24.0",
+    "next": "16.4.0",
+    "pg": "^8.23.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.0",
+    "https-proxy-agent": "^9.1.0",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "ws": "^8.22.0"
+  }
+}
