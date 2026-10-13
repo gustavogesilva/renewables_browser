@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import FilterBar from "./FilterBar";
 import PlantDrawer from "./PlantDrawer";
@@ -18,7 +18,6 @@ export type SetParams = (updates: Record<string, string | null>) => void;
 
 export default function Browser() {
   const sp = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
   const [meta, setMeta] = useState<Meta | null>(null);
   const [fetched, setFetched] = useState<{ key: string; total: number; mw: number } | null>(null);
@@ -47,9 +46,10 @@ export default function Browser() {
       }
       if (Object.keys(updates).some((k) => FILTER_KEYS.includes(k))) next.delete("page");
       const qs = next.toString();
-      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+      // native history update: synchronous and client-only (no server round trip); Next syncs useSearchParams
+      window.history.replaceState(null, "", qs ? `${pathname}?${qs}` : pathname);
     },
-    [router, pathname],
+    [pathname],
   );
 
   useEffect(() => {
