@@ -102,6 +102,11 @@ export default function Browser() {
             </button>
           ))}
         </div>
+        <form method="post" action="/api/logout">
+          <button type="submit" className="text-sm text-zinc-500 hover:text-zinc-900">
+            Sign out
+          </button>
+        </form>
       </header>
 
       <FilterBar meta={meta} sp={sp} setParams={setParams} />

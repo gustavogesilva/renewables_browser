@@ -20,12 +20,25 @@ from the project's Storage tab) for the data.
 The map is MapLibre GL with Esri World Imagery tiles on a globe. Esri imagery is free to use with attribution for a demo;
 production use needs an ArcGIS key or another imagery provider.
 
-API responses carry `s-maxage=86400`: the data only changes when a new load is seeded, and a new deployment starts
-with an empty cache.
+## Access
+
+The whole site is locked with one shared password, `SITE_PASSWORD`:
+
+- `proxy.ts` sends visitors without a valid session cookie to `/login` and answers API calls with 401.
+- `lib/db.ts` checks the cookie again before every query, so no route can read the database without it.
+- The cookie (`rb_session`, HttpOnly, 30 days) holds an HMAC of a fixed label keyed by the password. There is no
+  server-side session state, and changing the password signs everyone out.
+- API responses are `Cache-Control: private, no-store`: no CDN copy, and nothing left in the browser after sign-out.
+
+To change the password, edit `SITE_PASSWORD` in the Vercel project (Settings → Environment Variables) and redeploy;
+environment variables apply to new deployments only. If it is unset, nobody can sign in.
 
 ## Environment
 
-`DATABASE_URL`: Postgres connection string. The Neon integration sets it on the Vercel project.
+| Variable | Use |
+|---|---|
+| `DATABASE_URL` | Postgres connection string. The Neon integration sets it on the Vercel project |
+| `SITE_PASSWORD` | The site password (see Access) |
 
 ## Loading the data
 
@@ -44,7 +57,7 @@ string (`DATABASE_URL_UNPOOLED` in the Neon integration).
 
 ```bash
 npm install
-DATABASE_URL='postgresql://...' npm run dev
+DATABASE_URL='postgresql://...' SITE_PASSWORD='...' npm run dev
 ```
 
 Any Postgres 16 with PostGIS, `pg_trgm` and `unaccent` works, local or Neon.
